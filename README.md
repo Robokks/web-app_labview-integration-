@@ -36,6 +36,7 @@ A local JavaScript/WebMessage interface may avoid running a separate network ser
 
 - [Design log](docs/DESIGN_LOG.md) — dated discussion summaries, user ideas and unresolved questions.
 - [Architecture alternatives](docs/ARCHITECTURE_OPTIONS.md) — WebMessage, TCP, UDP and hybrid designs.
+- [Drag-and-drop front panel designer](docs/FRONT_PANEL_DESIGNER.md) — reusable widget plugins, templates, tag bindings and edit/run modes.
 
 ## Working rules
 
