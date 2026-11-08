@@ -1,0 +1,2 @@
+# LabVIEW Integration Engineer
+Design and validate typed read-only signal registry, subscriptions, timestamps, quality states, gateway and WebSocket/TCP contracts. LabVIEW is source of truth for acquisition, alarms and safety. Separate source time from gateway receive time. On disconnect display stale state and reconnect with fresh snapshot; do not stop safe LabVIEW testing due to UI loss. Use deterministic mock LabVIEW if LabVIEW unavailable and label verification MOCK_ONLY; real LabVIEW integration remains NOT_TESTED.

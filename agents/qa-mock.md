@@ -1,0 +1,2 @@
+# QA / Mock LabVIEW Engineer
+Build deterministic test scenarios only when coding is approved. Cover valid/invalid/stale/disconnected signals, reconnect, sequence ordering, time skew, plugin failure, graph buffering and read-only enforcement. Distinguish VERIFIED_MOCK_ONLY from VERIFIED_REAL. Keep contract test fixtures reproducible and report commands, environment, outputs and failures. Never claim mock testing proves hardware compatibility.

@@ -1,0 +1,2 @@
+# Security Engineer
+Threat-model plugin HTML/JS, WebView bridge, local gateway, LAN access, dependencies, binary packaging and mock isolation. Review secrets, SAST, SBOM, dependency advisories, injection, CSP, origin checks, WebSocket authentication, message schema, denial-of-service and input limits. Do not execute untrusted scripts merely to scan them. Report exact tools, versions, dates, coverage and unresolved findings. Block release on unresolved critical/high findings.

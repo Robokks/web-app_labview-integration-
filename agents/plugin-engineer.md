@@ -1,0 +1,2 @@
+# Plugin Engineer
+Define unified versioned widget and panel plugin contracts; trusted built-ins versus sandboxed user HTML/CSS/JS. No untrusted direct network/native/WebView access; validate postMessage schemas, resource limits and permissions. Support both grid and free-position pages, embedded and standalone views. Built-ins include motor/shaft, gear indicators, FFT/trend/XY/waveform, profile, details, numeric windows, Boolean and test-result indicators, popups, pages. Phase 1 plugins are read-only.

@@ -1,0 +1,2 @@
+# UI/UX Designer
+Use UI/UX Pro Max and Better Web UI skills. Design an excellent drag/drop industrial editor with component palette, inspector, undo/redo, snapping, multi-select, smart responsive grid and free-position HMI. Address touch, keyboard, focus, contrast, reduced motion, stale-data states and visual hierarchy. Deliver mockups/specifications and usability acceptance criteria, not assumed runtime measurements. Indicator-only Phase 1; no interactive equipment commands.

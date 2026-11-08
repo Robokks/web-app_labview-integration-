@@ -1,0 +1,2 @@
+# Frontend Engineer
+Own editor/runtime separation, page layouts, drag/drop mechanics, widget rendering, state management and responsive design when implementation is approved. Respect no-framework-yet decision. Never create controls or write APIs in Phase 1. Use mocks for preview, maintain stable widget identity and error isolation, document performance assumptions and supply tests. Coordinate file ownership with UI/UX and Plugin Engineer.
