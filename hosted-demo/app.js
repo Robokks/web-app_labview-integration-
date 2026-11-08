@@ -94,7 +94,7 @@
     canvas.replaceChildren();canvas.className=`canvas ${state.layout}-layout`;
     document.querySelectorAll('[data-layout]').forEach(b=>{const active=b.dataset.layout===state.layout;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
     state.widgets.forEach(w=>{
-      const el=document.createElement('article');el.className='widget';el.dataset.id=w.id;el.tabIndex=0;el.setAttribute('aria-label',`${w.title} widget`);
+      const el=document.createElement('article');el.className='widget';el.dataset.id=w.id;el.dataset.type=w.type;el.tabIndex=0;el.setAttribute('aria-label',`${w.title} widget`);
       if(w.id===state.selected)el.classList.add('selected');
       if(state.layout==='grid'){el.style.gridColumn=`span ${w.w}`;el.style.gridRow=`span ${w.h}`;el.draggable=!state.preview;}
       else{Object.assign(el.style,{position:'absolute',left:`${w.x}px`,top:`${w.y}px`,width:`${Math.max(120,w.w*76)}px`,height:`${w.h*92}px`});}
@@ -176,7 +176,8 @@
     if(!canvasEl)return;const rect=canvasEl.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);
     const W=Math.max(100,Math.floor(rect.width)),H=Math.max(60,Math.floor(rect.height));canvasEl.width=W*dpr;canvasEl.height=H*dpr;
     const ctx=canvasEl.getContext('2d');ctx.scale(dpr,dpr);ctx.clearRect(0,0,W,H);
-    ctx.strokeStyle='#30475f';ctx.lineWidth=1;
+    const light=document.documentElement.dataset.theme==='light';
+    ctx.strokeStyle=light?'#d9e2ed':'#30475f';ctx.lineWidth=1;
     for(let i=1;i<=3;i++){ctx.beginPath();ctx.moveTo(0,H*i/4);ctx.lineTo(W,H*i/4);ctx.stroke();}
     const data=state.history.slice(-72);if(data.length<2)return;
     const isXY=w.type==='xy';const keys=isXY?['motor.speed','motor.torque']:[w.signal];
@@ -189,8 +190,8 @@
       const x=8+(W-16)*((isXY?v[0]-minX:i)/spanX);
       const y=H-10-(H-22)*(v[isXY?1:0]-minY)/spanY;
       if(!i)ctx.moveTo(x,y);else ctx.lineTo(x,y);
-    });ctx.strokeStyle='#64aeff';ctx.lineWidth=2;ctx.lineJoin='round';ctx.stroke();
-    if(isXY){const last=values[values.length-1];const x=8+(W-16)*(last[0]-minX)/spanX;const y=H-10-(H-22)*(last[1]-minY)/spanY;ctx.fillStyle='#7ad1e7';ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();}
+    });ctx.strokeStyle=light?(isXY?'#e27722':'#137fd4'):'#64aeff';ctx.lineWidth=2;ctx.lineJoin='round';ctx.stroke();
+    if(isXY){const last=values[values.length-1];const x=8+(W-16)*(last[0]-minX)/spanX;const y=H-10-(H-22)*(last[1]-minY)/spanY;ctx.fillStyle=light?'#d26a10':'#7ad1e7';ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();}
   }
   function compatible(type,s){if(!s)return false;if(type==='spectrum')return false;
     if(['numeric','gauge','trend','motor','xy'].includes(type))return ['Float64','Float32','Integer'].includes(s.data_type);
