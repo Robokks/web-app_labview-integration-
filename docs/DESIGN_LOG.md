@@ -1,0 +1,47 @@
+# Design Discussion Log
+
+This file contains concise summaries of decisions and ideas discussed in chat, not a verbatim transcript. This is a **public** repository: do not add private system details, customer data, tokens, credentials or other secrets.
+
+## 2026-11-08 — Session 1: Initial project
+
+**User request:** Brainstorm and design web application–LabVIEW integration concepts. Maintain evolving design notes in this GitHub repository.
+
+**Initial alternatives (all unconfirmed):**
+- A remote web dashboard for existing LabVIEW applications.
+- A drag-and-drop web panel designer that connects to LabVIEW variables.
+- A universal web–LabVIEW integration API.
+- A combination of the above.
+
+**Initial candidate architecture:** Web UI ↔ Integration layer ↔ LabVIEW. No implementation committed or approved.
+
+## 2026-11-08 — Session 2: Embedded dashboard direction
+
+**User-stated concept:** "Inside the labview using web view toolkit to view dashboard. Data transfer via js or TCP or udp."
+
+**Requirements emerging from the statement:**
+- The dashboard is displayed **inside the LabVIEW application** using a WebView toolkit, not necessarily a standalone remote browser.
+- A web-technology UI (HTML/CSS/JavaScript) is an intended display surface.
+- Communication options to compare include JavaScript integration, TCP and UDP.
+- Bidirectional data flow is an architecture possibility; exact control scope is yet to be confirmed.
+
+**Technical research, not implementation decisions:**
+- The third-party WebView2 toolkit by sklein supports JavaScript execution and WebMessage event send/receive, and runs on Windows. See https://www.vipm.io/package/sklein_lib_webview2/ and https://github.com/kleinsimon/LV-WebView2.
+- WebView2 can use `window.chrome.webview.postMessage` from the page, with a host WebMessageReceived handler, and host-to-page messages. See https://learn.microsoft.com/en-us/microsoft-edge/webview2/how-to/communicate-btwn-web-native.
+- Ordinary browser JavaScript does not expose raw TCP or UDP sockets. Network data usually requires WebSocket/HTTP or a native host component/bridge. See https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API.
+- WebView UI responsiveness is a design constraint; avoid heavy work on the UI thread.
+- As an alternative for certain LabVIEW 2026 installations, NI has its own Chromium-based WebBrowser control; exact availability/API integration needs confirmation: https://knowledge.ni.com/KnowledgeArticleDetails?id=kA0VU000000Bwn30AC&l=en-US.
+
+**Recommended candidate for further discussion (NOT APPROVED):** embedded WebView ↔ JavaScript/WebMessage bridge ↔ LabVIEW application; investigate TCP/UDP where another native process/device is involved. Design LabVIEW to validate command requests before hardware action.
+
+**Pending clarifications:**
+1. Which exact toolkit: sklein WebView2, NI's own browser control, or a different one?
+2. Should the UI be fixed or a drag-and-drop configurable panel?
+3. What values/events need to move, and at what rate?
+4. Is communication only within one Windows application, or also across devices/PCs?
+5. Is the intended scope monitoring-only or sending validated control commands?
+
+**Decision status:** Nothing architectural has been frozen. Do not start coding until explicitly agreed.
+
+## Updating this log
+
+When a new design point emerges, append a dated summary with user-stated facts, hypotheses/alternatives, trade-offs and agreed decisions. The assistant can commit changes only during an active turn with GitHub access; this log does not auto-sync with chat.
