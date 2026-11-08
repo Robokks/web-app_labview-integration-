@@ -12,6 +12,7 @@
     result:  {label:'Test result', icon:'✓', signal:'test.result', w:4, h:2},
     xy:      {label:'XY plot', icon:'⌗', signal:'motor.speed', w:8, h:3},
     spectrum:{label:'FFT spectrum', icon:'▥', signal:'', w:4, h:2},
+    section: {label:'Section heading', icon:'≡', signal:'', w:12, h:1},
   });
   const DEFAULT = [
     ['numeric','Motor speed','motor.speed',4,2,18,18],
@@ -27,7 +28,7 @@
   const canvas = byId('canvas');
   const catalog = byId('catalog');
   const inspector = byId('inspector-content');
-  const state = {layout:'grid', preview:false, selected:null, widgets:[], signals:new Map(), history:[], connected:false, dirty:false, nextId:1, seq:-1};
+  const state = {layout:'grid', preview:false, selected:null, widgets:[], signals:new Map(), history:[], connected:false, dirty:false, nextId:1, seq:-1, templateId:'motor', pageTitle:'Motor Test Dashboard', pageDescription:'Visualize live rig parameters and measurement signals.'};
   const text = x => String(x === undefined || x === null ? '—' : x);
   const escape = x => text(x).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
@@ -42,7 +43,7 @@
       title:typeof raw.title==='string'?raw.title.slice(0,55):base.label,
       signal:typeof raw.signal==='string'&&raw.signal.length<90?raw.signal:base.signal,
       w:clamp(Number(raw.w)||base.w,2,12),h:clamp(Number(raw.h)||base.h,2,6),
-      x:clamp(Number(raw.x)||0,0,900),y:clamp(Number(raw.y)||0,0,700)};
+      x:clamp(Number(raw.x)||0,0,900),y:clamp(Number(raw.y)||0,0,3000)};
   };
   function defaults(){return DEFAULT.map((r,i)=>normalize({id:`widget-${i+1}`,type:r[0],title:r[1],signal:r[2],w:r[3],h:r[4],x:r[5],y:r[6]},i));}
   function load(){
@@ -50,7 +51,10 @@
       const v=JSON.parse(localStorage.getItem('panelforge-layout-v1')||'null');
       if(v?.schema_version===1 && ['grid','free'].includes(v.layout) && Array.isArray(v.widgets) && v.widgets.length<=100){
         const w=v.widgets.map(normalize).filter(Boolean);const ids=new Set(w.map(x=>x.id));
-        if(w.length&&ids.size===w.length){state.layout=v.layout;state.widgets=w;return;}
+        if(w.length&&ids.size===w.length){state.layout=v.layout;state.widgets=w;
+          state.templateId=typeof v.templateId==='string'?v.templateId:'motor';
+          state.pageTitle=typeof v.pageTitle==='string'?v.pageTitle.slice(0,70):'Motor Test Dashboard';
+          state.pageDescription=typeof v.pageDescription==='string'?v.pageDescription.slice(0,140):'Visualize live rig parameters and measurement signals.';return;}
       }
     }catch(_){/* corrupt settings safely fall back */}
     state.widgets=defaults();
@@ -60,12 +64,12 @@
   let toastTimer;
   function toast(s){byId('toast').textContent=s;byId('toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>byId('toast').classList.remove('visible'),2600);}
   function save(){
-    const data={schema_version:1,layout:state.layout,widgets:state.widgets};
+    const data={schema_version:1,layout:state.layout,widgets:state.widgets,templateId:state.templateId,pageTitle:state.pageTitle,pageDescription:state.pageDescription};
     try{localStorage.setItem('panelforge-layout-v1',JSON.stringify(data));markSaved();toast('Layout saved in this browser');}
     catch(_){toast('Could not save: browser storage unavailable');}
   }
   function exportProject(){
-    const body=JSON.stringify({schema_version:1,mode:'PHASE_1_READ_ONLY',layout:state.layout,widgets:state.widgets},null,2);
+    const body=JSON.stringify({schema_version:1,mode:'PHASE_1_READ_ONLY',layout:state.layout,widgets:state.widgets,templateId:state.templateId,pageTitle:state.pageTitle,pageDescription:state.pageDescription},null,2);
     const url=URL.createObjectURL(new Blob([body],{type:'application/json'}));
     const a=document.createElement('a');a.href=url;a.download='motor-test-dashboard.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);
     toast('Project JSON exported');
@@ -91,11 +95,14 @@
   }
   function setLayout(layout){if(!['grid','free'].includes(layout)||state.layout===layout)return;state.layout=layout;markDirty();render();}
   function render(){
+    byId('dashboard-title').firstChild.textContent=state.pageTitle+' ';
+    byId('dashboard-description').textContent=state.pageDescription;
     canvas.replaceChildren();canvas.className=`canvas ${state.layout}-layout`;
     document.querySelectorAll('[data-layout]').forEach(b=>{const active=b.dataset.layout===state.layout;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
     state.widgets.forEach(w=>{
       const el=document.createElement('article');el.className='widget';el.dataset.id=w.id;el.dataset.type=w.type;el.tabIndex=0;el.setAttribute('aria-label',`${w.title} widget`);
       if(w.id===state.selected)el.classList.add('selected');
+      if(w.type==='section')el.classList.add('section-widget');
       if(state.layout==='grid'){el.style.gridColumn=`span ${w.w}`;el.style.gridRow=`span ${w.h}`;el.draggable=!state.preview;}
       else{Object.assign(el.style,{position:'absolute',left:`${w.x}px`,top:`${w.y}px`,width:`${Math.max(120,w.w*76)}px`,height:`${w.h*92}px`});}
       const top=document.createElement('div');top.className='widget-top';
@@ -113,6 +120,7 @@
       canvas.append(el);
       updateWidget(el,w);
     });
+    if(state.layout==='free'){const bottom=Math.max(760,...state.widgets.map(w=>w.y+w.h*92+28));canvas.style.height=bottom+'px';}else canvas.style.height='';
     byId('canvas-count').textContent=`${state.widgets.length} components`;
     renderInspector();
   }
@@ -142,14 +150,17 @@
   function updateWidget(el,w){
     const main=el.querySelector('.widget-main'),foot=el.querySelector('.widget-footer');if(!main||!foot)return;
     const r=readout(w);let html='';
+    if(w.type==='section')html='<div class="section-caption">READ ONLY · SIMULATED SIGNALS</div>';
     if(w.type==='numeric')html=`<div class="widget-reading">${escape(typeof r.v==='number'?fixed(r.v,w.signal==='motor.power'?2:1):r.v)}<span class="widget-unit">${escape(r.unit)}</span></div><div class="widget-detail">${escape(w.signal||'Unbound signal')}</div>`;
     if(w.type==='gauge'){
-      const p=clamp((Number(r.v)||0)/50*100,0,100);
-      html=`<div class="widget-gauge"><div class="gauge-ring" style="--gauge:${p*3.6}deg"><div class="gauge-inner">${escape(fixed(r.v,1))}<small>${escape(r.unit)}</small></div></div><div class="gauge-meta">LIVE READING<strong>${Math.round(p)}%</strong>Scale: 0 – 50</div></div>`;
+      const range=w.signal==='steer.pressure'?250:w.signal==='dyno.load'?100:50;
+      const p=clamp((Number(r.v)||0)/range*100,0,100);
+      html=`<div class="widget-gauge"><div class="gauge-ring" style="--gauge:${p*3.6}deg"><div class="gauge-inner">${escape(fixed(r.v,1))}<small>${escape(r.unit)}</small></div></div><div class="gauge-meta">LIVE READING<strong>${Math.round(p)}%</strong>Scale: 0 – ${range}</div></div>`;
     }
     if(w.type==='led'){
       const on=r.v===true;
-      html=`<div class="led-display"><div class="led-circle${on?'':' off'}"></div><div><strong>${on?'RUNNING':'STOPPED'}</strong><small>${escape(w.signal)}</small></div></div>`;
+      const label=w.signal.endsWith('.ready')?(on?'READY':'NOT READY'):w.signal.endsWith('.healthy')?(on?'HEALTHY':'CHECK REQUIRED'):(on?'RUNNING':'STOPPED');
+      html=`<div class="led-display"><div class="led-circle${on?'':' off'}"></div><div><strong>${label}</strong><small>${escape(w.signal)}</small></div></div>`;
     }
     if(w.type==='motor')html=`<div class="motor-display"><div class="motor-graphic"><div class="motor-body"><span class="rotor${r.v>10?' spinning':''}">✳</span></div><div class="shaft"></div></div><div class="motor-stats"><strong>${escape(fixed(r.v,0))} rpm</strong><small>${escape(fixed(val('motor.torque'),1))} Nm · simulated</small></div></div>`;
     if(w.type==='gear'){
@@ -167,8 +178,8 @@
     }
     if(w.type==='spectrum')html='<div class="spectrum-empty"><strong>NO FFT SOURCE</strong>Connect a waveform or validated FFT signal in a later milestone. No synthetic spectrum is presented as measured data.</div>';
     main.innerHTML=html;
-    const status=w.type==='spectrum'?'Not configured':r.status;
-    foot.replaceChildren();const dot=document.createElement('span');dot.className='dot';const label=document.createElement('span');label.textContent=status==='Good'?'LIVE · MOCK':status;foot.append(dot,label);
+    const status=w.type==='spectrum'?'Not configured':w.type==='section'?'Section':r.status;
+    foot.replaceChildren();if(w.type==='section'){el.classList.remove('stale','disconnected');return;}const dot=document.createElement('span');dot.className='dot';const label=document.createElement('span');label.textContent=status==='Good'?'LIVE · MOCK':status;foot.append(dot,label);
     el.classList.toggle('stale',status==='Stale');el.classList.toggle('disconnected',status==='Disconnected');
     if(w.type==='trend'||w.type==='xy')drawGraph(main.querySelector('canvas'),w);
   }
@@ -180,7 +191,7 @@
     ctx.strokeStyle=light?'#d9e2ed':'#30475f';ctx.lineWidth=1;
     for(let i=1;i<=3;i++){ctx.beginPath();ctx.moveTo(0,H*i/4);ctx.lineTo(W,H*i/4);ctx.stroke();}
     const data=state.history.slice(-72);if(data.length<2)return;
-    const isXY=w.type==='xy';const keys=isXY?['motor.speed','motor.torque']:[w.signal];
+    const isXY=w.type==='xy';const torqueSignal=w.signal==='dyno.speed'?'dyno.torque':w.signal==='rig.input.speed'?'rig.input.torque':'motor.torque';const keys=isXY?[w.signal,torqueSignal]:[w.signal];
     const values=data.map(s=>keys.map(k=>Number(s[k]))).filter(v=>v.every(Number.isFinite));if(values.length<2)return;
     const minX=isXY?Math.min(...values.map(v=>v[0])):0;
     const maxX=isXY?Math.max(...values.map(v=>v[0])):Math.max(values.length-1,1);
@@ -193,7 +204,7 @@
     });ctx.strokeStyle=light?(isXY?'#e27722':'#137fd4'):'#64aeff';ctx.lineWidth=2;ctx.lineJoin='round';ctx.stroke();
     if(isXY){const last=values[values.length-1];const x=8+(W-16)*(last[0]-minX)/spanX;const y=H-10-(H-22)*(last[1]-minY)/spanY;ctx.fillStyle=light?'#d26a10':'#7ad1e7';ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();}
   }
-  function compatible(type,s){if(!s)return false;if(type==='spectrum')return false;
+  function compatible(type,s){if(type==='section')return false;if(!s)return false;if(type==='spectrum')return false;
     if(['numeric','gauge','trend','motor','xy'].includes(type))return ['Float64','Float32','Integer'].includes(s.data_type);
     if(type==='led')return s.data_type==='Boolean';if(['gear','result'].includes(type))return s.data_type==='Enum';if(type==='profile')return s.data_type==='String';return true;}
   function renderInspector(){
@@ -205,13 +216,14 @@
       const input=document.createElement('input');input.type=type;input.value=value;input.addEventListener('change',()=>handle(input.value));wrapper.append(title,input);return wrapper;
     };
     inspector.append(field('Display title',w.title,v=>{w.title=v.slice(0,55);markDirty();render();}));
-    const bind=document.createElement('label');bind.className='field';const btitle=document.createElement('span');btitle.textContent='Data binding';const select=document.createElement('select');
+    if(w.type==='section'){const info=document.createElement('p');info.className='field-hint';info.textContent='Section headings are informational and never bind to equipment signals.';inspector.append(info);}
+    if(w.type!=='section'){const bind=document.createElement('label');bind.className='field';const btitle=document.createElement('span');btitle.textContent='Data binding';const select=document.createElement('select');
     const option=(id,label)=>{const o=document.createElement('option');o.value=id;o.textContent=label;select.append(o);};
     option('','— No signal —');
     for(const [id,s] of state.signals)if(compatible(w.type,s))option(id,`${id} · ${s.data_type}`);
     if(w.signal&&!Array.from(select.options).some(o=>o.value===w.signal))option(w.signal,`${w.signal} · pending`);
     select.value=w.signal;select.addEventListener('change',()=>{w.signal=select.value;markDirty();render();});bind.append(btitle,select);inspector.append(bind);
-    const note=document.createElement('p');note.className='field-hint';note.textContent='Bindings are read-only. The mock source is not connected to equipment.';inspector.append(note);
+    const note=document.createElement('p');note.className='field-hint';note.textContent='Bindings are read-only. The mock source is not connected to equipment.';inspector.append(note);}
     const heading=document.createElement('div');heading.className='section-heading';heading.textContent='LAYOUT';inspector.append(heading);
     const row=document.createElement('div');row.className='field-row';
     row.append(field('Width (columns)',w.w,v=>{w.w=clamp(parseInt(v,10)||w.w,2,12);markDirty();render();},'number'),field('Height (rows)',w.h,v=>{w.h=clamp(parseInt(v,10)||w.h,2,6);markDirty();render();},'number'));inspector.append(row);
@@ -246,6 +258,27 @@
     ws.addEventListener('close',()=>{setConnection(false);setTimeout(connect,retry);retry=Math.min(retry*2,10000);});
     ws.addEventListener('error',()=>ws.close());
   }
+  function applyTemplate(id){
+    const template=window.PanelForgeTemplates?.find(t=>t.id===id);
+    if(!template)return false;
+    if(!window.confirm(`Load ${template.title}?\n\nThis will replace widgets in the current editor. Saved layouts will remain until you click Save layout.`))return false;
+    // Row-packed free-position coordinates accompany every grid widget. No hardware commands.
+    let col=0,top=18,rowHeight=0;
+    const widgets=template.widgets.map((entry,i)=>{
+      const w=entry.w||3,h=entry.h||2;
+      if(col+w>12){top+=rowHeight*96+12;col=0;rowHeight=0;}
+      const widget=normalize({...entry,id:`widget-${i+1}`,x:18+col*77,y:top},i);
+      col+=w;rowHeight=Math.max(rowHeight,h);
+      return widget;
+    }).filter(Boolean);
+    if(!widgets.length||widgets.length>100)return false;
+    state.templateId=template.id;state.pageTitle=template.title;state.pageDescription=template.description;
+    state.widgets=widgets;state.selected=null;state.layout='grid';state.nextId=widgets.length+1;
+    if(state.preview){state.preview=false;document.body.classList.remove('preview');byId('preview').textContent='Preview';}
+    state.history.length=0;markDirty();render();toast(`${template.title} loaded · mock only`);
+    return true;
+  }
+  window.PanelForgeTemplateAPI=Object.freeze({apply:applyTemplate,current:()=>state.templateId});
   function setup(){
     load();const ids=state.widgets.map(w=>Number(w.id.split('-')[1])).filter(Number.isFinite);state.nextId=Math.max(1,...ids)+1;
     renderCatalog();render();
@@ -253,7 +286,7 @@
     byId('search').addEventListener('keydown',e=>{if(e.key==='Escape')byId('search').blur();});
     document.querySelectorAll('[data-layout]').forEach(b=>b.addEventListener('click',()=>setLayout(b.dataset.layout)));
     byId('publish').addEventListener('click',save);byId('export').addEventListener('click',exportProject);
-    byId('reset').addEventListener('click',()=>{state.widgets=defaults();state.selected=null;state.layout='grid';markDirty();render();toast('Default layout restored');});
+    byId('reset').addEventListener('click',()=>{state.widgets=defaults();state.selected=null;state.layout='grid';state.templateId='motor';state.pageTitle='Motor Test Dashboard';state.pageDescription='Visualize live rig parameters and measurement signals.';markDirty();render();toast('Default layout restored');});
     byId('preview').addEventListener('click',()=>{state.preview=!state.preview;document.body.classList.toggle('preview',state.preview);byId('preview').textContent=state.preview?'Exit preview':'Preview';state.selected=null;render();toast(state.preview?'Preview · no equipment controls':'Designer active');});
     canvas.addEventListener('dragover',e=>{if(state.preview)return;e.preventDefault();canvas.classList.add('drop-target');});
     canvas.addEventListener('dragleave',e=>{if(!canvas.contains(e.relatedTarget))canvas.classList.remove('drop-target');});

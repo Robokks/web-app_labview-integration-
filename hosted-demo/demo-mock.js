@@ -11,7 +11,24 @@
     ['test.result', 'Enum', ''],
     ['gear.actual', 'Enum', ''],
     ['profile.step', 'String', ''],
-    ['profile.progress', 'Float64', '%']
+    ['profile.progress', 'Float64', '%'],
+    ['rig.input.speed','Float64','rpm'], ['rig.input.torque','Float64','Nm'],
+    ['rig.fa_lh.speed','Float64','rpm'], ['rig.fa_lh.torque','Float64','Nm'],
+    ['rig.ra_lh.speed','Float64','rpm'], ['rig.ra_lh.torque','Float64','Nm'],
+    ['rig.ra_rh.speed','Float64','rpm'], ['rig.ra_rh.torque','Float64','Nm'],
+    ['rig.pto.speed','Float64','rpm'], ['rig.pto.torque','Float64','Nm'],
+    ['steer.angle','Float64','deg'], ['steer.torque','Float64','Nm'],
+    ['steer.pressure','Float64','bar'], ['steer.oil_flow','Float64','L/min'],
+    ['steer.oil_temp','Float64','°C'], ['steer.position','Float64','mm'],
+    ['steer.ready','Boolean',''],
+    ['dyno.speed','Float64','rpm'], ['dyno.torque','Float64','Nm'],
+    ['dyno.power','Float64','kW'], ['dyno.load','Float64','%'],
+    ['dyno.temperature','Float64','°C'], ['dyno.ambient','Float64','°C'],
+    ['dyno.ready','Boolean',''],
+    ['plant.temperature','Float64','°C'], ['plant.pressure','Float64','bar'],
+    ['plant.flow','Float64','L/min'], ['plant.level','Float64','%'],
+    ['plant.healthy','Boolean',''], ['plant.operation','String',''],
+    ['plant.value_a','Float64',''], ['plant.value_b','Float64',''], ['plant.value_c','Float64','']
   ]);
   const allowed = new Set(metadata.map(([id]) => id));
   const gears = Object.freeze(['N', '1', '2', '3', '4', '5', '6']); // Fictional demo sequence, NOT G1800 map.
@@ -29,7 +46,26 @@
       'test.result': tick % 240 < 210 ? 'PASS' : 'WAIT',
       'gear.actual': gears[Math.floor(tick / 55) % gears.length],
       'profile.step': ['Ramp up', 'Hold speed', 'Ramp down'][Math.floor(tick / 90) % 3],
-      'profile.progress': Number(((tick % 270) / 2.7).toFixed(1))
+      'profile.progress': Number(((tick % 270) / 2.7).toFixed(1)),
+      'rig.input.speed': +(speed*0.98).toFixed(1), 'rig.input.torque': +(torque*1.14).toFixed(1),
+      'rig.fa_lh.speed': +(speed*.62 + 21*Math.sin(x/3)).toFixed(1), 'rig.fa_lh.torque': +(torque*.88).toFixed(1),
+      'rig.ra_lh.speed': +(speed*.53 + 12*Math.cos(x/4)).toFixed(1), 'rig.ra_lh.torque': +(torque*.73).toFixed(1),
+      'rig.ra_rh.speed': +(speed*.52 + 15*Math.sin(x/4)).toFixed(1), 'rig.ra_rh.torque': +(torque*.71).toFixed(1),
+      'rig.pto.speed': +(speed*.31).toFixed(1), 'rig.pto.torque': +(torque*.42).toFixed(1),
+      'steer.angle': +(22*Math.sin(x/5)).toFixed(1), 'steer.torque': +(88+22*Math.sin(x/7)).toFixed(1),
+      'steer.pressure': +(118+29*Math.sin(x/4)).toFixed(1), 'steer.oil_flow': +(19+5*Math.cos(x/6)).toFixed(1),
+      'steer.oil_temp': +(41+2.5*Math.sin(x/8)).toFixed(1), 'steer.position': +(155+32*Math.sin(x/5)).toFixed(1),
+      'steer.ready': true,
+      'dyno.speed': +(speed*.86).toFixed(1), 'dyno.torque': +(torque*1.28).toFixed(1),
+      'dyno.power': +(speed*torque*.86*1.28/9549).toFixed(2), 'dyno.load': +(51+19*Math.sin(x/8)).toFixed(1),
+      'dyno.temperature': +(48+3*Math.cos(x/9)).toFixed(1), 'dyno.ambient': +(30+1.5*Math.sin(x/20)).toFixed(1),
+      'dyno.ready': true,
+      'plant.temperature': +(43+6*Math.sin(x/6)).toFixed(1), 'plant.pressure': +(19+4*Math.sin(x/4)).toFixed(1),
+      'plant.flow': +(85+14*Math.cos(x/5)).toFixed(1), 'plant.level': +(65+8*Math.sin(x/10)).toFixed(1),
+      'plant.healthy': true, 'plant.operation': ['Monitoring','Stabilizing','Holding'][Math.floor(tick/100)%3],
+      'plant.value_a': +(12+2*Math.sin(x/4)).toFixed(1),
+      'plant.value_b': +(25+3*Math.cos(x/5)).toFixed(1),
+      'plant.value_c': +(36+4*Math.sin(x/6)).toFixed(1)
     };
     const now = new Date().toISOString();
     return {

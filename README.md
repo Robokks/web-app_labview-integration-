@@ -32,6 +32,10 @@ Design a dashboard using web technologies displayed **inside a LabVIEW applicati
 
 A local JavaScript/WebMessage interface may avoid running a separate network server. TCP or UDP may be relevant to another native process or remote hardware, but embedded browser JavaScript cannot directly open ordinary raw TCP/UDP sockets. These are still candidate choices only.
 
+## Rig template library
+
+The hosted read-only demo includes five editable industrial rig layouts: motor, transmission, steering gear, dynamometer and general HMI. See [template guide](hosted-demo/README_TEMPLATES.md). Demo data is browser-generated and does not verify hardware.
+
 ## Phase 1 implementation
 
 - [Prototype setup and test status](README_MVP.md) — local read-only dashboard and mock LabVIEW signal gateway.

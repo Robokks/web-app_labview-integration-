@@ -29,6 +29,8 @@ jobs:
           node --check web/app.js
       - name: Run mock-only contract and browser tests
         run: python -m pytest -q tests/test_gateway.py tests/test_browser.py
+      - name: Test hosted rig templates in in-memory Chromium
+        run: python hosted-demo/test_templates.py
   security-checks:
     runs-on: ubuntu-latest
     steps:
