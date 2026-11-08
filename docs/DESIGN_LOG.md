@@ -73,3 +73,17 @@ When a new design point emerges, append a dated summary with user-stated facts, 
 **Status:** Concept design only. No implementation authorized or libraries selected.
 
 **Web research references:** https://github.com/gridstack/gridstack.js ; https://echarts.apache.org/ ; https://learn.microsoft.com/en-us/microsoft-edge/webview2/get-started/win32 ; https://www.vipm.io/package/sklein_lib_webview2/
+
+## 2026-11-08 — Session 4: Separate web application launched automatically by LabVIEW
+
+**User idea:** "Or sparete web app. When the labview open the exe call automatically the web app. Which is better?"
+
+**Options reviewed:** (A) WebView-only dashboard embedded in LabVIEW, (B) local web application automatically launched when the LabVIEW EXE starts, and (C) one shared web dashboard supporting both embedded WebView and a separate browser window.
+
+**Recommendation for discussion (NOT an approved decision):** Build the drag-and-drop editor / widget plugin system as an independent web app, with one shared data-binding protocol. LabVIEW could automatically start the necessary local service, then launch a browser window; the same web app could optionally be shown in LabVIEW WebView. This avoids maintaining two separate UI implementations.
+
+**Key caveats:** A browser cannot connect directly over raw TCP/UDP: use WebSocket/HTTP or a native gateway. A new local service adds packaging, readiness/health, reconnection, shutdown and authentication requirements. The external app is not inherently faster; measure throughput and latency. Separate UI failures must not bypass LabVIEW hardware safeguards.
+
+**Status:** No solution selected, no code created. Ask whether the operator requires a separate browser, an embedded display, or both.
+
+**Detailed comparison:** [DEPLOYMENT_COMPARISON.md](DEPLOYMENT_COMPARISON.md).
