@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#173d63">
+  <title>PanelForge • LabVIEW Front Panel Designer</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/demo-mobile.css">
+  <link rel="stylesheet" href="/mobile-ui.css">
+  <link rel="stylesheet" href="/theme-light.css">
+  <script src="/demo-mock.js" defer></script>
+  <script src="/app.js" defer></script>
+  <script src="/mobile-ui.js" defer></script>
+  <script src="/theme-switch.js" defer></script>
+  <link rel="stylesheet" href="/template-library.css">
+  <link rel="stylesheet" href="/operator-launch.css">
+  <script src="/template-library.js" defer></script>
+  <script src="/operator-launch.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="identity"><div class="brandmark" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div><strong>PanelForge</strong><small>LIVE UI PREVIEW · SIMULATED SIGNALS</small></div></div>
+    <div class="topmid"><span class="breadcrumb">Workspace <b>/</b> Motor test rig <b>/</b> Main dashboard</span><span class="phase-tag">PUBLIC DEMO · READ ONLY</span></div>
+    <div class="topactions"><div id="connection" class="connection disconnected" role="status" aria-live="polite"><i></i><span>Connecting</span></div><button id="reset" class="btn ghost" title="Restore default layout">Reset</button><button id="export" class="btn ghost">Export JSON</button><button id="preview" class="btn outline">Preview</button><button id="operator-open" class="btn" type="button" title="Open a display-only operator screen">Operator screen</button><button id="publish" class="btn primary">Save layout</button></div>
+  </header>
+  <div class="workspace">
+    <aside class="library" aria-label="Widget library">
+      <div class="side-title"><div><div class="eyebrow">COMPONENTS</div><h2>Widget library</h2></div><span class="count-pill" id="widget-count">10</span></div>
+      <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Find components..." aria-label="Search widgets"><kbd>/</kbd></label>
+      <div class="library-section-title">DISPLAY COMPONENTS <span>DRAG TO ADD</span></div>
+      <div id="catalog" class="catalog"></div>
+      <div class="library-foot"><div class="shield">◎</div><div><strong>Read-only by design</strong><p>No device commands or write endpoints in this phase.</p></div></div>
+    </aside>
+    <main class="stage">
+      <div class="stage-header"><div class="page-details"><div class="eyebrow">PAGE 01 <span>·</span> MAIN WORKSPACE</div><h1>Motor Test Dashboard <span class="subtle-dot">●</span></h1><p>Visualize live rig parameters and measurement signals.</p></div><div class="stage-actions"><div class="segmented" role="group" aria-label="Layout mode"><button data-layout="grid" class="active" aria-pressed="true">▦ &nbsp; Smart grid</button><button data-layout="free" aria-pressed="false">▧ &nbsp; Free canvas</button></div><button id="add-page" class="btn icon-button" title="Page management planned for a later milestone" disabled>＋</button></div></div>
+      <div class="stage-tools"><div class="tab is-active">◉ &nbsp; Dashboard<span class="tab-close">✕</span></div><div class="stage-tools-right"><span class="save-indicator"><i id="saved-dot"></i><span id="save-text">Unsaved changes</span></span><div class="divider-vert"></div><span class="zoom-label">100%</span></div></div>
+      <section id="canvas-scroll" class="canvas-scroll" aria-label="Dashboard editor"><div class="canvas-wrapper"><div class="ruler"><span>0</span><span>200</span><span>400</span><span>600</span><span>800</span><span>1000</span></div><div id="canvas" class="canvas grid-layout" aria-label="Widget canvas" tabindex="0"></div><div class="canvas-hint">✥ &nbsp; Drag components onto the canvas · Click to edit · Delete to remove</div></div></section>
+      <footer class="stage-footer"><span><i class="tiny-dot"></i> BROWSER-GENERATED MOCK SIGNALS <span class="footer-divider">/</span> No physical equipment connected</span><span id="canvas-count">0 components</span></footer>
+    </main>
+    <aside class="inspector" aria-label="Properties inspector"><div class="inspector-head"><div class="eyebrow">CONFIGURATION</div><h2>Properties</h2><p id="selection-caption">Select a widget on the canvas to edit it.</p></div><div id="inspector-content" class="inspector-content"><div class="empty-selection"><div>▧</div><strong>Nothing selected</strong><p>Choose a component to configure its appearance and signal binding.</p></div></div><div class="inspector-foot"><div class="minor-heading">DATA SOURCE</div><div class="source-row"><div class="mock-icon">⌁</div><div><strong>Browser-only mock simulator</strong><small>Simulated locally · no hardware</small></div><span class="mock-badge">MOCK</span></div><div class="minor-heading">VERIFICATION</div><div class="verification"><span>●</span> Not connected to real LabVIEW</div></div></aside>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

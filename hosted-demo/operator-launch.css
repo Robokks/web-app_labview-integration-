@@ -1,0 +1,4 @@
+/* The launch action exists only in Designer Mode. Operator has no menus or actions. */
+#operator-open{background:#d9f8ee;color:#0d634e;border:1px solid #8ed2bb;font-weight:850}
+#operator-open:hover{background:#c3f0e0}
+@media(max-width:840px){#operator-open{display:none!important}}

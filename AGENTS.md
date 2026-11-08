@@ -33,7 +33,7 @@
 - No release with unresolved Critical/High security findings; no fabricated scan reports. Do not execute unreviewed third-party install scripts in CI.
 
 ## Repository mutation rule
-**No coding, commits, pushes, GitHub Actions dispatches or release changes** unless the user expressly requests that action. For this skills installation, the user has explicitly authorized adding AI skills/guidance. All other implementation remains out of scope.
+**Implementation authorization:** On 2026-11-08, the user explicitly authorized starting development. Work on a dedicated feature branch and keep unreviewed work off `main`. Requirements remain unchanged. Release, deployment and real-hardware actions need separate explicit authorization.
 
 ## UI skill references
 - .agents/skills/graphify/SKILL.md (and its references): knowledge graph, requires graphifyy CLI to execute.
