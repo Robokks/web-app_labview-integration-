@@ -39,13 +39,18 @@ A local JavaScript/WebMessage interface may avoid running a separate network ser
 - [Drag-and-drop front panel designer](docs/FRONT_PANEL_DESIGNER.md) — reusable widget plugins, templates, tag bindings and edit/run modes.
 - [Deployment comparison](docs/DEPLOYMENT_COMPARISON.md) — embedded WebView vs auto-launched separate web app, including a shared dual-mode option.
 
+
+## AI agent skills and UI design rules
+
+See [AI skills and installation](docs/AI_UI_SKILLS.md) for Graphify, UI/UX Pro Max, and Better Web UI. All coding agents must read [AGENTS.md](AGENTS.md) first and respect the locked Phase 1 read-only scope. Third-party skill guidance does **not** supersede approved requirements. Skill installation does not prove runtime compatibility or passing tests.
+
 ## Working rules
 
 1. Brainstorm and record the user's actual requirements before freezing any architecture.
 2. Distinguish **user-stated direction**, **proposed ideas**, **researched facts**, and **approved decisions**.
 3. Discuss design and trade-offs before coding. Do not start implementation until specifically agreed.
 4. Keep source code, private information, credentials and customer data out of the discussion log.
-5. Update these files through explicit GitHub writes during active conversations. Chat messages do **not** automatically synchronize with GitHub.
+5. Update repository content only when the user explicitly authorizes a GitHub update. Chat messages do **not** automatically synchronize with GitHub.
 
 ## Open topics
 
