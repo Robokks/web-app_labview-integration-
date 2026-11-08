@@ -14,13 +14,15 @@
   <script src="/mobile-ui.js" defer></script>
   <script src="/theme-switch.js" defer></script>
   <link rel="stylesheet" href="/template-library.css">
+  <link rel="stylesheet" href="/operator-launch.css">
   <script src="/template-library.js" defer></script>
+  <script src="/operator-launch.js" defer></script>
 </head>
 <body>
   <header class="topbar">
     <div class="identity"><div class="brandmark" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div><strong>PanelForge</strong><small>LIVE UI PREVIEW · SIMULATED SIGNALS</small></div></div>
     <div class="topmid"><span class="breadcrumb">Workspace <b>/</b> Motor test rig <b>/</b> Main dashboard</span><span class="phase-tag">PUBLIC DEMO · READ ONLY</span></div>
-    <div class="topactions"><div id="connection" class="connection disconnected" role="status" aria-live="polite"><i></i><span>Connecting</span></div><button id="reset" class="btn ghost" title="Restore default layout">Reset</button><button id="export" class="btn ghost">Export JSON</button><button id="preview" class="btn outline">Preview</button><button id="publish" class="btn primary">Save layout</button></div>
+    <div class="topactions"><div id="connection" class="connection disconnected" role="status" aria-live="polite"><i></i><span>Connecting</span></div><button id="reset" class="btn ghost" title="Restore default layout">Reset</button><button id="export" class="btn ghost">Export JSON</button><button id="preview" class="btn outline">Preview</button><button id="operator-open" class="btn" type="button" title="Open a display-only operator screen">Operator screen</button><button id="publish" class="btn primary">Save layout</button></div>
   </header>
   <div class="workspace">
     <aside class="library" aria-label="Widget library">

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#08488e">
+  <meta name="robots" content="noindex,nofollow">
+  <title>PanelForge — Test Rig Operator Display</title>
+  <link rel="stylesheet" href="/operator.css">
+  <script src="/demo-mock.js" defer></script>
+  <script src="/operator.js" defer></script>
+</head>
+<body>
+  <div id="operator-shell" class="operator-shell">
+    <header class="operator-header" role="banner">
+      <div class="header-mark" aria-hidden="true">PF</div>
+      <div class="header-titles">
+        <h1 id="rig-title">DYNAMOMETER TEST RIG — MAIN PANEL</h1>
+        <p id="rig-description">Read-only operating overview · simulated data</p>
+      </div>
+      <div class="header-status" aria-label="Data quality">
+        <div class="status-dot" id="data-dot" aria-hidden="true"></div>
+        <div><strong id="connection-text">Connecting…</strong><small id="data-clock">—</small></div>
+      </div>
+    </header>
+
+    <main class="operator-main">
+      <div class="section-header"><h2>LIVE MEASUREMENTS</h2><span id="measurement-count">Read-only signals</span></div>
+      <section id="metric-grid" class="metric-grid" aria-label="Measurement indicators"></section>
+      <div class="dashboard-main-grid">
+        <section class="instrument-panel trend-panel" aria-label="Live signal trends">
+          <div class="panel-heading"><span class="heading-mark">▥</span><h2 id="primary-chart-title">SPEED / TORQUE / POWER — TIME TREND</h2><span class="heading-sub">SIMULATED</span></div>
+          <div class="chart-legend" id="trend-legend"></div>
+          <div class="graph-area"><canvas id="primary-chart" aria-label="Simulated time series" role="img"></canvas></div>
+          <div class="panel-footer" id="trend-footer">Waiting for telemetry</div>
+        </section>
+        <div class="detail-rail" id="detail-rail"></div>
+      </div>
+      <section class="dashboard-bottom" id="dashboard-bottom" aria-label="Additional rig monitoring"></section>
+    </main>
+    <footer class="operator-status-line" role="status"><span><i class="status-led"></i> PANELFORGE · DISPLAY ONLY</span><span id="operator-status-message">Browser-generated mock signals — no physical equipment connected</span><span>NO EQUIPMENT CONTROLS</span></footer>
+  </div>
+</body>
+</html>
