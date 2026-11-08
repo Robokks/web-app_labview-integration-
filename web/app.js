@@ -240,7 +240,7 @@
   let retry=1000;
   function connect(){
     const ws=new WebSocket(`${location.protocol==='https:'?'wss':'ws'}://${location.host}/ws`);
-    ws.addEventListener('open',()=>{retry=1000;setConnection(true);});
+    ws.addEventListener('open',()=>{retry=1000;state.seq=-1;state.signals.clear();state.history.length=0;setConnection(true);});
     ws.addEventListener('message',e=>{let data;try{data=JSON.parse(e.data);}catch(_){return;}handleFrame(data);});
     ws.addEventListener('close',()=>{setConnection(false);setTimeout(connect,retry);retry=Math.min(retry*2,10000);});
     ws.addEventListener('error',()=>ws.close());

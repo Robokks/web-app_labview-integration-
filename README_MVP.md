@@ -48,3 +48,9 @@ Tests exercise mock protocol, security headers, cross-origin restrictions, read-
 ## Security boundary
 
 In this mock, HTTP only responds to GET paths and WebSocket only accepts read-only subscriptions. Unexpected messages, including commands, are rejected. Default bind address is 127.0.0.1, Host/Origin checked and CSP applied. This is not a complete penetration test or production security approval.
+
+## CI and evidence
+
+- `.github/workflows/phase1-mock-checks.yml` defines tests, Python static scanning (Bandit), and dependency audits (pip-audit). A committed workflow is not evidence it has run successfully.
+- See `IMPLEMENTATION_CHECKPOINTS.md` for requirement traceability, locally executed test evidence and production blockers.
+- Browser-interaction tests inject the mock WebSocket into an in-memory page because direct Chromium HTTP navigation is blocked in this runner; the actual backend WebSocket is tested separately via aiohttp's test client.

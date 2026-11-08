@@ -1,5 +1,6 @@
 """In-memory Chromium frontend tests. Browser HTTP/WebSocket integration NOT verified."""
 from pathlib import Path
+import shutil
 
 import pytest
 from playwright.sync_api import sync_playwright
@@ -10,7 +11,8 @@ ROOT = Path(__file__).resolve().parents[1] / "web"
 @pytest.fixture
 def page():
     with sync_playwright() as p:
-        browser = p.chromium.launch(executable_path='/usr/bin/chromium', headless=True, args=['--no-sandbox'])
+        browser_path = shutil.which('chromium') or shutil.which('google-chrome')
+        browser = p.chromium.launch(executable_path=browser_path, headless=True, args=['--no-sandbox'])
         page = browser.new_page(viewport={'width': 1536, 'height': 960})
         html = (ROOT / 'index.html').read_text('utf-8')
         html = html.replace('<link rel="stylesheet" href="/styles.css">', '')
