@@ -1,0 +1,25 @@
+name: Native TCP contract (Rust)
+on:
+  pull_request:
+    paths:
+      - 'integrations/rune-tcp-poc/**'
+      - '.github/workflows/rune-tcp-ci.yml'
+  push:
+    branches:
+      - feature/phase1-mock-designer
+    paths:
+      - 'integrations/rune-tcp-poc/**'
+      - '.github/workflows/rune-tcp-ci.yml'
+permissions:
+  contents: read
+jobs:
+  rust-transport:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test native Rust framing protocol
+        working-directory: integrations/rune-tcp-poc
+        run: cargo test --all-targets --offline
+      - name: Compile native Rust transport binaries
+        working-directory: integrations/rune-tcp-poc
+        run: cargo build --bins --offline

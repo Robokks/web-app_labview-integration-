@@ -1,0 +1,18 @@
+[package]
+name = "panelforge-rune-tcp"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "JavaScript-free framed TCP transport proof of concept for native Rune / LabVIEW integration"
+
+[lib]
+name = "panelforge_tcp"
+path = "src/lib.rs"
+
+[[bin]]
+name = "panel-tcp-client"
+path = "src/bin/tcp_client.rs"
+
+[[bin]]
+name = "panel-tcp-mock"
+path = "src/bin/tcp_mock.rs"
