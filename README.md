@@ -1,39 +1,54 @@
 # Web App – LabVIEW Integration
 
-**Stage:** Concept exploration / brainstorming  
-**Repository:** `Robokks/web-app_labview-integration-`  
+**Status:** Concept exploration / brainstorming (no architecture frozen)  
 **Started:** 2026-11-08
 
-## Purpose
+## Goal
 
-Explore and design a flexible integration between a browser-based web application and LabVIEW. The exact product scope has **not yet been decided**. This repository is the versioned home for our design discussions, alternatives, questions and decisions.
+Design a dashboard using web technologies displayed **inside a LabVIEW application's front panel** through a WebView toolkit. Explore bidirectional transfer between JavaScript and LabVIEW through WebMessage, TCP or UDP; compare approaches before choosing.
 
-No implementation is authorized by these concept documents.
-
-## Brainstorm workflow
-
-1. Discuss an idea in chat.
-2. Record a concise, dated summary in [docs/DESIGN_LOG.md](docs/DESIGN_LOG.md) (not a verbatim chat transcript).
-3. Put alternatives and trade-offs in [docs/CONCEPTS.md](docs/CONCEPTS.md).
-4. Move an idea to [docs/DECISIONS.md](docs/DECISIONS.md) only when explicitly agreed; proposed ideas remain marked **Unconfirmed**.
-5. Later create requirements, interface specifications, diagrams and source code after scope and architecture are agreed.
-
-**Important:** GitHub updates occur only when the assistant actively performs a commit during a chat turn; this is not background or automatic synchronization. Never put credentials, tokens, customer data, internal network addresses, or private documents in this public repository.
-
-## Candidate starting architecture (unconfirmed)
+## Current working concept (not approved for implementation)
 
 ```text
-Browser UI  <-->  Web API / Gateway  <-->  LabVIEW Application
-(view/control)    (auth, events, types)     (acquisition/control)
++-----------------------------------------------------------+
+| LabVIEW Windows Application                               |
+|                                                           |
+|  +-----------------------+                                |
+|  | Embedded WebView      |  HTML / CSS / JavaScript        |
+|  | Dashboard             |                                |
+|  +-----------+-----------+                                |
+|              | UI bridge / WebMessage / optional network  |
+|  +-----------v-----------+                                |
+|  | LabVIEW message and   |                                |
+|  | command dispatcher    |                                |
+|  +-----------+-----------+                                |
+|              |                                            |
+|  +-----------v-----------+                                |
+|  | Acquisition and       |                                |
+|  | control application   |                                |
+|  +-----------------------+                                |
++-----------------------------------------------------------+
 ```
 
-Potential gateway approaches: LabVIEW-native services, Python integration service, or Node.js integration service. We will compare their trade-offs before choosing.
+A local JavaScript/WebMessage interface may avoid running a separate network server. TCP or UDP may be relevant to another native process or remote hardware, but embedded browser JavaScript cannot directly open ordinary raw TCP/UDP sockets. These are still candidate choices only.
 
-## Questions to settle
+## Brainstorm documentation
 
-- What is the **primary product**: an existing LabVIEW application's remote dashboard, a configurable drag-and-drop web front panel, a general LabVIEW integration API, or a combination?
-- Is the first target Windows LabVIEW, cRIO Real-Time, or both?
-- Which interactions must be supported first: telemetry, commands, configuration, profiles, alarms, or file/report transfer?
-- Will the system run locally, over a LAN, or across remote networks?
+- [Design log](docs/DESIGN_LOG.md) — dated discussion summaries, user ideas and unresolved questions.
+- [Architecture alternatives](docs/ARCHITECTURE_OPTIONS.md) — WebMessage, TCP, UDP and hybrid designs.
 
-See [docs/DESIGN_LOG.md](docs/DESIGN_LOG.md) for the evolving discussion.
+## Working rules
+
+1. Brainstorm and record the user's actual requirements before freezing any architecture.
+2. Distinguish **user-stated direction**, **proposed ideas**, **researched facts**, and **approved decisions**.
+3. Discuss design and trade-offs before coding. Do not start implementation until specifically agreed.
+4. Keep source code, private information, credentials and customer data out of the discussion log.
+5. Update these files through explicit GitHub writes during active conversations. Chat messages do **not** automatically synchronize with GitHub.
+
+## Open topics
+
+- Exact WebView toolkit and LabVIEW version.
+- Dashboard widgets and whether the layout is editable.
+- Update rates, datasets and the UI-to-LabVIEW command model.
+- Local-only vs networked clients.
+- Safety, lifecycle, error and reconnection behavior.
