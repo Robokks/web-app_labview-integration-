@@ -45,3 +45,31 @@ This file contains concise summaries of decisions and ideas discussed in chat, n
 ## Updating this log
 
 When a new design point emerges, append a dated summary with user-stated facts, hypotheses/alternatives, trade-offs and agreed decisions. The assistant can commit changes only during an active turn with GitHub access; this log does not auto-sync with chat.
+
+## 2026-11-08 — Session 3: Drag-and-drop front-panel designer and widget plugins
+
+**User-stated direction:** "It drag and drop front pannel. For the indicator and graph control connect the js interface or ready made template directly plugin."
+
+**Interpretation for confirmation:** A browser-technology front-panel designer with drag/drop controls and indicators, including graph components, with either JavaScript interface connectivity or ready-made templates/plugins. The resulting dashboard is intended to be displayed inside LabVIEW WebView (from previous session).
+
+**New proposed model, not yet approved:**
+- Separate **Design Mode** (add, place, resize, configure, bind widgets) from **Runtime Mode** (monitor, interact).
+- A common component/plugin contract to avoid bespoke JS for every dashboard item.
+- Templates are saved arrangements of component instances; plugins provide component appearance and behavior.
+- Shared LabVIEW↔JavaScript data gateway with typed tag values and updates, rather than every plugin directly managing TCP/UDP.
+- Candidate widgets: numeric indicator, switch, button, LED, gauge, slider, waveform/trend graph, XY graph, table and alarm list.
+- Properties include unique ID, position/size, appearance, value/data type, binding to LabVIEW parameter(s), update rates, read-only/write permissions.
+- Store the dashboard as a versioned JSON manifest for save/load and reusability. Individual plugin code/assets would be packaged locally for offline runtime.
+- Consider GridStack.js for drag/resizable placement and Apache ECharts for charts; do not lock libraries yet.
+- Keep logic for equipment safety, authorization and command validation on LabVIEW side; UI submits requests and displays ACK/error.
+- Design typed telemetry stream (possibly buffered, throttled/downsampled for graphs) independently of LabVIEW acquisition/control-loop timing.
+
+**Important design questions:**
+1. Will users design and edit the dashboard **inside the embedded LabVIEW WebView**, or will a separate web designer export a layout for LabVIEW runtime?
+2. Should users bind widgets by selecting enumerated LabVIEW signals/controls, typing tag names manually, or both?
+3. Should the first widget set be fixed/built-in, or should users be able to install third-party plugin bundles?
+4. What types of graphs and data rates are required?
+
+**Status:** Concept design only. No implementation authorized or libraries selected.
+
+**Web research references:** https://github.com/gridstack/gridstack.js ; https://echarts.apache.org/ ; https://learn.microsoft.com/en-us/microsoft-edge/webview2/get-started/win32 ; https://www.vipm.io/package/sklein_lib_webview2/
