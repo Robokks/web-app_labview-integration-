@@ -246,38 +246,6 @@
     ws.addEventListener('close',()=>{setConnection(false);setTimeout(connect,retry);retry=Math.min(retry*2,10000);});
     ws.addEventListener('error',()=>ws.close());
   }
-  // Small, validated designer-only API used by the template library.
-  // It never exposes the transport or any equipment commands.
-  const templateAPI = Object.freeze({
-    getLayout(){
-      return {schema_version:1,layout:state.layout,widgets:state.widgets.map(w=>({...w})),
-        title:document.querySelector('.page-details h1')?.firstChild?.textContent?.trim()||'Dashboard',
-        dirty:state.dirty};
-    },
-    loadLayout(candidate){
-      if(!candidate||typeof candidate!=='object'||!['grid','free'].includes(candidate.layout)
-        ||!Array.isArray(candidate.widgets)||candidate.widgets.length<1||candidate.widgets.length>100)return false;
-      const normalized=candidate.widgets.map((raw,i)=>{
-        if(!raw||typeof raw!=='object'||!Object.hasOwn(TYPES,raw.type)
-          ||typeof raw.title!=='string'||raw.title.length>55
-          ||typeof raw.signal!=='string'||raw.signal.length>90)return null;
-        return normalize(raw,i);
-      });
-      if(normalized.some(w=>!w)||new Set(normalized.map(w=>w.id)).size!==normalized.length)return false;
-      state.layout=candidate.layout;
-      state.widgets=normalized;
-      state.selected=null;
-      state.nextId=Math.max(0,...normalized.map(w=>Number(w.id.split('-').at(-1))||0))+1;
-      if(state.preview){state.preview=false;document.body.classList.remove('preview');byId('preview').textContent='Preview';}
-      const title=typeof candidate.title==='string'&&candidate.title.trim()?candidate.title.trim().slice(0,60):'Rig dashboard';
-      const heading=document.querySelector('.page-details h1');if(heading?.firstChild)heading.firstChild.textContent=title+' ';
-      const crumb=document.querySelector('.breadcrumb');if(crumb)crumb.textContent='Workspace / '+title+' / Dashboard';
-      markDirty();render();toast('Template loaded — customize and save your layout');
-      window.dispatchEvent(new CustomEvent('panelforge:template-loaded',{detail:{title}}));
-      return true;
-    }
-  });
-  Object.defineProperty(window,'PanelForgeDesigner',{value:templateAPI,writable:false,configurable:false});
   function setup(){
     load();const ids=state.widgets.map(w=>Number(w.id.split('-')[1])).filter(Number.isFinite);state.nextId=Math.max(1,...ids)+1;
     renderCatalog();render();

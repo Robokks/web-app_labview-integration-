@@ -10,7 +10,7 @@
   const isMobile=()=>matchMedia('(max-width:840px)').matches;
   const classes=['mobile-panel-library','mobile-panel-properties','mobile-panel-more'];
   const nav=document.createElement('nav');nav.className='mobile-nav';nav.setAttribute('aria-label','Mobile workspace navigation');
-  const actions=[['dashboard','▦','Home'],['templates','▤','Templates'],['library','＋','Add'],['properties','⚙','Edit'],['preview','◉','Preview'],['more','⋯','More']];
+  const actions=[['dashboard','▦','Dashboard'],['library','＋','Add'],['properties','⚙','Edit'],['preview','◉','Preview'],['more','⋯','More']];
   const buttons=new Map();
   for(const [id,glyph,label] of actions){const b=document.createElement('button');b.type='button';b.dataset.mobileNav=id;b.setAttribute('aria-label',label);b.setAttribute('aria-expanded','false');const icon=document.createElement('span');icon.className='nav-icon';icon.setAttribute('aria-hidden','true');icon.textContent=glyph;const title=document.createElement('span');title.textContent=label;b.append(icon,title);nav.append(b);buttons.set(id,b);}
   root.append(nav);
@@ -29,7 +29,6 @@
   }
   for(const [id,b] of buttons)b.addEventListener('click',()=>{
     if(!isMobile())return;
-    if(id==='templates'){show(null);document.getElementById('templates-open')?.click();return;}
     if(id==='preview'){show(null);document.getElementById('preview')?.click();const active=root.classList.contains('preview');b.lastElementChild.textContent=active?'Design':'Preview';b.classList.toggle('active',active);return;}
     if(id==='dashboard'){show(null);window.scrollTo({top:0,behavior:'smooth'});return;}
     const chosen=root.classList.contains('mobile-panel-'+id)?null:id;show(chosen);

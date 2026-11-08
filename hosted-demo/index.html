@@ -9,18 +9,18 @@
   <link rel="stylesheet" href="/demo-mobile.css">
   <link rel="stylesheet" href="/mobile-ui.css">
   <link rel="stylesheet" href="/theme-light.css">
-  <link rel="stylesheet" href="/templates.css">
   <script src="/demo-mock.js" defer></script>
   <script src="/app.js" defer></script>
   <script src="/mobile-ui.js" defer></script>
   <script src="/theme-switch.js" defer></script>
-  <script src="/templates.js" defer></script>
+  <link rel="stylesheet" href="/template-library.css">
+  <script src="/template-library.js" defer></script>
 </head>
 <body>
   <header class="topbar">
     <div class="identity"><div class="brandmark" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div><strong>PanelForge</strong><small>LIVE UI PREVIEW · SIMULATED SIGNALS</small></div></div>
     <div class="topmid"><span class="breadcrumb">Workspace <b>/</b> Motor test rig <b>/</b> Main dashboard</span><span class="phase-tag">PUBLIC DEMO · READ ONLY</span></div>
-    <div class="topactions"><div id="connection" class="connection disconnected" role="status" aria-live="polite"><i></i><span>Connecting</span></div><button id="templates-open" class="btn templates-launch" type="button">▦ &nbsp; Templates</button><button id="reset" class="btn ghost" title="Restore default layout">Reset</button><button id="export" class="btn ghost">Export JSON</button><button id="preview" class="btn outline">Preview</button><button id="publish" class="btn primary">Save layout</button></div>
+    <div class="topactions"><div id="connection" class="connection disconnected" role="status" aria-live="polite"><i></i><span>Connecting</span></div><button id="reset" class="btn ghost" title="Restore default layout">Reset</button><button id="export" class="btn ghost">Export JSON</button><button id="preview" class="btn outline">Preview</button><button id="publish" class="btn primary">Save layout</button></div>
   </header>
   <div class="workspace">
     <aside class="library" aria-label="Widget library">
@@ -38,7 +38,6 @@
     </main>
     <aside class="inspector" aria-label="Properties inspector"><div class="inspector-head"><div class="eyebrow">CONFIGURATION</div><h2>Properties</h2><p id="selection-caption">Select a widget on the canvas to edit it.</p></div><div id="inspector-content" class="inspector-content"><div class="empty-selection"><div>▧</div><strong>Nothing selected</strong><p>Choose a component to configure its appearance and signal binding.</p></div></div><div class="inspector-foot"><div class="minor-heading">DATA SOURCE</div><div class="source-row"><div class="mock-icon">⌁</div><div><strong>Browser-only mock simulator</strong><small>Simulated locally · no hardware</small></div><span class="mock-badge">MOCK</span></div><div class="minor-heading">VERIFICATION</div><div class="verification"><span>●</span> Not connected to real LabVIEW</div></div></aside>
   </div>
-  <div id="template-modal-root"></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
