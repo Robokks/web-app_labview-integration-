@@ -5,7 +5,9 @@ import shutil
 import pytest
 from playwright.sync_api import sync_playwright
 
-SITE = Path(__file__).resolve().parents[1] / "site"
+SITE = Path(__file__).resolve().parents[1]
+if not (SITE / "operator.html").is_file():
+    SITE = SITE / "site"
 
 
 def inline_operator():
